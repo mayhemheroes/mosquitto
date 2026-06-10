@@ -1,0 +1,62 @@
+# libFuzzer dictionary for mosquitto's MQTT-packet broker harnesses.
+# Tokens are MQTT control-packet fixed headers and protocol markers consumed by the broker's
+# packet read path (handle__packet / handle__connect / publish / subscribe / unsubscribe / auth).
+# Format: each entry is a byte string the fuzzer can splice into inputs.
+
+# ── MQTT control packet types (fixed-header command byte, high nibble) ───────────────────────────
+connect="\x10"
+connack="\x20"
+publish_qos0="\x30"
+publish_qos1="\x32"
+publish_qos2="\x34"
+puback="\x40"
+pubrec="\x50"
+pubrel="\x62"
+pubcomp="\x70"
+subscribe="\x82"
+suback="\x90"
+unsubscribe="\xA2"
+unsuback="\xB0"
+pingreq="\xC0"
+pingresp="\xD0"
+disconnect="\xE0"
+auth="\xF0"
+
+# ── Protocol name + level markers ────────────────────────────────────────────────────────────────
+mqtt_proto_name="\x00\x04MQTT"
+mqisdp_proto_name="\x00\x06MQIsdp"
+proto_level_v311="\x04"
+proto_level_v5="\x05"
+
+# ── CONNECT connect-flags bytes (clean-session / will / will-qos / user / pass) ──────────────────
+connect_flags_clean="\x02"
+connect_flags_will="\x06"
+connect_flags_will_qos1="\x0C"
+connect_flags_will_retain="\x20"
+connect_flags_userpass="\xC0"
+
+# ── Keepalive / common remaining-length encodings ────────────────────────────────────────────────
+keepalive_10="\x00\x0a"
+keepalive_60="\x00\x3c"
+remlen_0="\x00"
+remlen_127="\x7F"
+remlen_128="\x80\x01"
+remlen_16383="\xFF\x7F"
+
+# ── MQTT v5 property bytes (length + a few common identifiers) ───────────────────────────────────
+props_empty="\x00"
+prop_payload_format="\x01"
+prop_message_expiry="\x02"
+prop_content_type="\x03"
+prop_topic_alias="\x23"
+prop_session_expiry="\x11"
+prop_auth_method="\x15"
+prop_auth_data="\x16"
+prop_user_property="\x26"
+
+# ── Topic-ish strings (length-prefixed) for SUBSCRIBE/PUBLISH parsing ───────────────────────────
+topic_a="\x00\x01a"
+topic_hash="\x00\x01#"
+topic_plus="\x00\x01+"
+topic_slash="\x00\x03a/b"
+shared_sub="\x00\x0e$share/g/topic"

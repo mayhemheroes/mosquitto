@@ -1,0 +1,9 @@
+project: mosquitto
+target: broker_fuzz_handle_subscribe
+testsuite:
+  - https://$MAYHEM_DOMAIN/$MAYHEM_PROJECT/$MAYHEM_TARGET/testsuite.tar
+  - file://mayhem/broker_fuzz_handle_subscribe/testsuite
+cmds:
+  - cmd: /mayhem/broker_fuzz_handle_subscribe
+    libfuzzer: true
+    dictionary: /mayhem/mayhem/mqtt_packet.dict
